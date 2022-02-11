@@ -18,4 +18,4 @@
 .scannerwork/
 
 # Helm
-.charts/
+.charts/**

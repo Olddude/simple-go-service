@@ -80,3 +80,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+environment:
+- DB_USERNAME=
+- DB_PASSWORD=
