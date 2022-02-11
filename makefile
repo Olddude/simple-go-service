@@ -12,4 +12,4 @@ clean:
 	docker image rm simple-go-service --force
 	docker image prune --force
 	docker container prune --force
-	git clean --force
+	git clean -Xfd
