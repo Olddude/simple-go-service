@@ -1,14 +1,15 @@
 run:
 	go run .
 
-clean:
-	git clean .
-
 build:
 	docker build -t simple-go-service .
 
 install:
 	helm install simple-go-service .
 
-uninstall:
+clean:
 	helm uninstall simple-go-service
+	docker image rm simple-go-service --force
+	docker image prune --force
+	docker container prune --force
+	git clean --force
