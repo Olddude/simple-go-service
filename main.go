@@ -1,22 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"simple-go-service/configuration"
+	"simple-go-service/models"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-type (
-	user struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-)
-
 var (
-	users = map[int]*user{}
+	users = map[int]*models.User{}
 	seq   = 1
 )
 
@@ -25,13 +22,13 @@ var (
 //----------
 
 func createUser(c echo.Context) error {
-	u := &user{
-		ID: seq,
+	u := &models.User{
+		Id: seq,
 	}
 	if err := c.Bind(u); err != nil {
 		return err
 	}
-	users[u.ID] = u
+	users[u.Id] = u
 	seq++
 	return c.JSON(http.StatusCreated, u)
 }
@@ -42,12 +39,13 @@ func getUser(c echo.Context) error {
 }
 
 func updateUser(c echo.Context) error {
-	u := new(user)
+	u := new(models.User)
 	if err := c.Bind(u); err != nil {
 		return err
 	}
 	id, _ := strconv.Atoi(c.Param("id"))
-	users[id].Name = u.Name
+	users[id].Email = u.Email
+	users[id].Password = u.Password
 	return c.JSON(http.StatusOK, users[id])
 }
 
@@ -63,6 +61,13 @@ func healthCheck(c echo.Context) error {
 
 func main() {
 	e := echo.New()
+
+	err := godotenv.Load()
+	if err != nil {
+		e.Logger.Fatal("Error loading .env file")
+	}
+
+	fmt.Println(configuration.Database().Name)
 
 	// Middleware
 	e.Use(middleware.Logger())
